@@ -1,44 +1,54 @@
+class EnteroMutable:
+    def __init__(self, valor):
+        self.valor = valor
+
+    def sumar(self, cantidad=1):
+        self.valor += cantidad
+    
+    def devolver_valor(self):
+        return self.valor 
+
+
+
 def moneda_inicial_es_mayor(monedas, inicio, fin):
    return (monedas[inicio] >= monedas[fin])
 
-def seleccionar_moneda(monedas, indices, jugador):
+
+def seleccionar_moneda(monedas, inicio, fin, jugador, puntos_sofia, puntos_mateo):
    
     if jugador % 2 != 0:
-        if moneda_inicial_es_mayor(monedas, indices[0], indices[1]):
-            moneda_seleccionada = monedas[indices[0]]
-            indices[0] += 1
+        if moneda_inicial_es_mayor(monedas, inicio.devolver_valor(), fin.devolver_valor()):
+            puntos_sofia.sumar(monedas[inicio.devolver_valor()])
+            inicio.sumar()
         else: 
-            moneda_seleccionada = monedas[indices[1]] 
-            indices[1] -= 1
+            puntos_sofia.sumar(monedas[fin.devolver_valor()])
+            fin.sumar(-1)
     else:
-        if moneda_inicial_es_mayor(monedas, indices[0], indices[1]):
-            moneda_seleccionada = monedas[indices[1]]
-            indices[1] -= 1
+        if moneda_inicial_es_mayor(monedas, inicio.devolver_valor(), fin.devolver_valor()):
+            puntos_mateo.sumar(monedas[fin.devolver_valor()])
+            fin.sumar(-1)
         else: 
-            moneda_seleccionada = monedas[indices[0]]
-            indices[0] += 1
-          
-    return (moneda_seleccionada)
-
+            puntos_mateo.sumar(monedas[inicio.devolver_valor()])
+            inicio.sumar()
+       
+  
 
 def jugar(monedas):
-    inicio = 0
-    fin = len(monedas) - 1
-    indices = [inicio, fin]
-    puntos_sofi = 0
-    puntos_mateo = 0
-    for i in range(1, len(monedas)):
-        valor_moneda = seleccionar_moneda(monedas, indices, i)
-        if i % 2 != 0:
-            puntos_sofi += valor_moneda
-        else:
-            puntos_mateo += valor_moneda    
+    inicio = EnteroMutable(0)
+    fin = EnteroMutable(len(monedas) - 1)
+    puntos_sofia = EnteroMutable(0)
+    puntos_mateo = EnteroMutable(0)
+
+
+    for i in range (1, len(monedas) + 1):
+        seleccionar_moneda(monedas, inicio, fin, i, puntos_sofia, puntos_mateo)
   
-    print(f"Puntos sofi: {puntos_sofi}")
-    print(f"Puntos mateo: {puntos_mateo}")
+  
+    print(f"Puntos sofi: {puntos_sofia.devolver_valor()}")
+    print(f"Puntos mateo: {puntos_mateo.devolver_valor()}")
 
 
 if __name__ == "__main__":
-   
-    monedas = [72,165,794,892,880,341,882,570,679,725,979,375,459,603,112,436,587,699,681,83]
+
+    monedas =[406,691,451,628,950,324,906,34,345,647,589,585,728,338,598,362,999,227,248,863,852,344,166,153,778]
     jugar(monedas)
